@@ -1,12 +1,8 @@
-# importing needed libraries
 import pyotp
 from flask import *
-from flask_bootstrap import Bootstrap
 
-# configuring flask application
+
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "APP_SECRET_KEY"
-Bootstrap(app)
 
 
 # homepage route
@@ -14,60 +10,33 @@ Bootstrap(app)
 def index():
     return "<h1>Hello World!</h1>"
 
-
-# login page route
-@app.route("/login/")
-def login():
-    return render_template("login.html")
-
-
-# login form route
-@app.route("/login/", methods=["POST"])
-def login_form():
-    # demo creds
-    creds = {"username": "test", "password": "password"}
-
-    # getting form data
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    # authenticating submitted creds with demo creds
-    # redirecting users to 2FA page when creds are valid
-    if username == creds["username"] and password == creds["password"]:
-        return redirect(url_for("login_2fa"))
+"""
+    Recive por parametros la secret key y el pin a validar
+    Returna true or false
+"""
+@app.route("/lorenzo/validate_pin", methods=["GET", "POST"])
+def a():
+    secret_key_user = str(request.args.get('sec_key'))
+    pin = str(request.args.get('pin'))
+    if (secret_key_user != None and pin != None):
+        totp = pyotp.TOTP(secret_key_user)
+        return str(totp.verify(pin))
     else:
-        # inform users if creds are invalid
-        flash("You have supplied invalid login credentials!", "danger")
-        return redirect(url_for("login"))
+        return "Error"
 
-
-# 2FA page route
-@app.route("/login/2fa/")
-def login_2fa():
-    # generating random secret key for authentication
-    secret = pyotp.random_base32()
-    return render_template("login_2fa.html", secret=secret)
-
-
-# 2FA form route
-@app.route("/login/2fa/", methods=["POST"])
-def login_2fa_form():
-    # getting secret key used by user
-    secret = request.form.get("secret")
-    # getting OTP provided by user
-    otp = int(request.form.get("otp"))
-
-    # verifying submitted OTP with PyOTP
-    if pyotp.TOTP(secret).verify(otp):
-        # inform users if OTP is valid
-        flash("The TOTP 2FA token is valid", "success")
-        return redirect(url_for("login_2fa"))
-    else:
-        # inform users if OTP is invalid
-        flash("You have supplied an invalid 2FA token!", "danger")
-        return redirect(url_for("login_2fa"))
-
+"""
+Recibe el user por url y genero el string para que creen el qr
+En issuer_name va el nombre de la app que va aparecer en la aplicacion authenticator
+"""
+@app.route("/lorenzo/generar_user", methods=["GET", "POST"])
+def b():
+    dict = {}
+    user = str(request.args.get('user'))
+    secret_key = pyotp.random_base32()
+    dict['secret_key'] = str(secret_key)
+    dict['codigo_para_qr']= pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="Lorenzo")
+    return dict
 
 # running flask server
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0' , port=8080)
