@@ -1,38 +1,51 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
 <head>
-	<title></title>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/qrcode.js"></script>
+<title>Cross-Browser QRCode generator for Javascript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<script type="text/javascript" src="../static/jquery.min.js"></script>
+<script type="text/javascript" src="../static/qrcode.js"></script>
+<style type="text/css">
+div.qr_style img {
+  width: 200px;
+  height: 200px;
+  margin-top: 300px;
+}
+</style>
 </head>
 <body>
-<h1>El qr generado es: {{qr}}</h1>
-<form onsubmit="generate();return false;">
-	<input type="text" id="qr" name="" value={{qr}}>
-</form>
-
-<div id="qrResult" style="height: 100px;width: 100px">
-	
-</div>
+<input id="text" type="text" value={{qr}} style="visibility:hidden" /><br />
+<div id="qrcode" class="qr_style"></div>
 
 <script type="text/javascript">
-	var qrcode=new QRCode(document.getElementById('qrResult'),{
-		width:250,
-		height:250
-	});
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+	width : 100,
+	height : 100
+});
 
-function generate(){
-	var message=document.getElementById('qr');
-	if(!message.value){
+function makeCode () {		
+	var elText = document.getElementById("text");
+	
+	if (!elText.value) {
 		alert("Input a text");
-		message.focus();
+		elText.focus();
 		return;
 	}
-
-	qrcode.makeCode(message.value);
+	
+	qrcode.makeCode(elText.value);
 }
 
-</script>
+makeCode();
 
+$("#text").
+	on("blur", function () {
+		makeCode();
+	}).
+	on("keydown", function (e) {
+		if (e.keyCode == 13) {
+			makeCode();
+		}
+	});
+</script>
 </body>
-</html>
