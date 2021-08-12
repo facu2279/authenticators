@@ -1,8 +1,3 @@
-from datetime import datetime
-import pyotp
-from flask import *
-app = Flask(__name__)
-
 """****************************************************************
 *******************************************************************
 ***  Made by Facundo Diaz - August 2021                         ***
@@ -13,6 +8,12 @@ app = Flask(__name__)
 ***                                                             ***
 *******************************************************************
 ****************************************************************"""
+#Importo librerias necesarias
+
+from datetime import datetime
+import pyotp
+from flask import *
+app = Flask(__name__)
 
 # diccionario de prueba para hacer testeos hasta agregar database
 usuarios = {
