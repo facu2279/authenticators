@@ -5,8 +5,7 @@
 ***  Documentation about PyOTP Library                          ***
 ***  https://pyauth.github.io/pyotp/                            ***
 ***                                                             ***
-***  Online qr generator                                        ***
-***  https://www.the-qrcode-generator.com/                      ***
+***                                                             ***
 *******************************************************************
 ****************************************************************"""
 #Importo librerias necesarias
@@ -15,7 +14,9 @@ from datetime import datetime
 import re
 import pyotp
 from flask import *
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
 # diccionario de prueba para hacer testeos hasta agregar database
 usuarios = {
@@ -31,28 +32,16 @@ usuarios = {
 def index():
     return "Online"
 
-"""
-    Recive por parametros la secret key y el pin a validar
-    Retorna true or false
-"""
+""" """
 @app.route("/lorenzo/validar_pin", methods=["GET", "POST"])
 def a():
-    """ Hacer consulta a base de datos con el nombre de usuario para poder extraer secret key
-    """
-    # capturo el user y pin que me pasan por url
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
-    #chequeo si existe el user en el diccionario (borrar cuando se agregue db)
     if user in usuarios.keys():
-        #cargo secret key que le corresponde a este user
         secret_key_user = usuarios[user]
-        #si existe el pin, osea que me pasaron un pin
         if pin:
-            #si existe la secret key
             if (secret_key_user):
-                #creo el objecto de tipo top que corresponde con el user que me pasaron
                 totp = pyotp.TOTP(secret_key_user)
-                #verifico si el pin del usuario coincide con el de mi objeto en este tiempo y retorno
                 return str(totp.verify(pin))
             else:
                 return "Error"
@@ -61,53 +50,31 @@ def a():
     else:
         return "Usuario no valido"
 
-"""
-Recibe el user por url y genero el string para que creen el qr
-
-En issuer_name va el nombre de la app que va aparecer en la aplicacion authenticator
-
-En dict_to_bdd se guarda, nombre del usuario, secret key, fecha y qr para guardar en base de datos
-
-Retorno un string para generar qr
-"""
+""" """
 @app.route("/lorenzo/generar_usuario", methods=["GET", "POST"])
-def b():
-
+def bebe():
+ 
     if request.method == "POST":
-        #print("entre por post")
-        #creo el diccionario para ir guardando los datos y desp hacer consulta sql
         dict_to_bdd = {}
-        #user = str(request.args.get('user'))
-        user = request.form['usuario']
-        #chequeo que exista el usuario en mis usuarios registrados
+        user = str(request.args.get('user'))
+        # user = request.form['usuario']
         if user in usuarios.keys():
-            #si existe, no lo creo y retorno mensaje
             return "Este usuario ya tiene un qr activo"
         else:
-            #si el usuario no existe le genero una secret key random en base32
             secret_key = pyotp.random_base32()
-            #genero el codigo qr para este usuario
             qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
-            #guardo datos en el diccionario para despues guardar en base de datos
             dict_to_bdd['user'] = user
             dict_to_bdd['secret_key'] = str(secret_key)
             dict_to_bdd['qr'] = qr
-            #fecha de creacion (actual)
             fecha = datetime.now()
-            #cambio el formato de la fecha para que sea compatible con la de sql
             fecha = fecha.strftime("%Y-%m-%d")
             dict_to_bdd['fecha'] = fecha
-            #dejar esto para poder tener usuarios registrados hasta que no se agregue bdd
             usuarios[user] = secret_key
             print(dict_to_bdd)
             return str(qr)
-            #return render_template('generado.html', qr=qr)
-    """else:
-        return render_template('generar_nuevo.html')"""
 
 @app.route("/lorenzo/print", methods=["GET", "POST"])
 def c():
-    #printea diccionario con usuarios que esten registrados, solo para testeo
     return usuarios
 
 # running flask server
