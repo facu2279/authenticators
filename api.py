@@ -100,9 +100,10 @@ def b():
             #dejar esto para poder tener usuarios registrados hasta que no se agregue bdd
             usuarios[user] = secret_key
             print(dict_to_bdd)
-            return render_template('generado.html', qr=qr)
-    else:
-        return render_template('generar_nuevo.html')
+            return str(qr)
+            #return render_template('generado.html', qr=qr)
+    """else:
+        return render_template('generar_nuevo.html')"""
 
 @app.route("/lorenzo/print", methods=["GET", "POST"])
 def c():
