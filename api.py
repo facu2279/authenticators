@@ -33,7 +33,7 @@ def index():
     return "Online"
 
 """ """
-@app.route("/lorenzo/validar_pin", methods=["GET", "POST"])
+@app.route("/test/validar_pin", methods=["POST"])
 def a():
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
@@ -51,7 +51,7 @@ def a():
         return "Usuario no valido"
 
 """ """
-@app.route("/lorenzo/generar_usuario", methods=["GET", "POST"])
+@app.route("/test/generar_usuario", methods=["POST"])
 def bebe():
  
     if request.method == "POST":
