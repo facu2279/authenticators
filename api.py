@@ -82,7 +82,7 @@ def b():
         #si el usuario no existe le genero una secret key random en base32
         secret_key = pyotp.random_base32()
         #genero el codigo qr para este usuario
-        qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="Lorenzo"))
+        qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
         #guardo datos en el diccionario para despues guardar en base de datos
         dict_to_bdd['user'] = user
         dict_to_bdd['secret_key'] = str(secret_key)
