@@ -1,9 +1,20 @@
 from datetime import datetime
 import pyotp
 from flask import *
-
 app = Flask(__name__)
 
+"""*************************************************************************
+****************************************************************************
+***                                                                      ***
+***                                                                      ***
+***                                                                      ***
+***                                                                      ***
+***                                                                      ***
+***                                                                      ***
+****************************************************************************
+*************************************************************************"""
+
+# diccionario de prueba para hacer testeos hasta agregar database
 usuarios = {
     "caraque":"2U5EFSHZEYUE5KLL56H2DASNLMUT3HJN",
     "fadiaz":"XAD7IP5YHH5S7ML5DPZJI55D6JBLSKEY",
@@ -12,27 +23,36 @@ usuarios = {
     "TESTING": "VLGAJEKSHSQ4HOYNLOX4TT6CYNBXZLRF"
     }
 
-# homepage route
+# homepage route to check
 @app.route("/")
 def index():
     return "Online"
 
 """
     Recive por parametros la secret key y el pin a validar
-    Returna true or false
+    Retorna true or false
 """
 @app.route("/lorenzo/validar_pin", methods=["GET", "POST"])
 def a():
     """ Hacer consulta a base de datos con el nombre de usuario para poder extraer secret key
     """
+    # capturo el user y pin que me pasan por url
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
+    #chequeo si existe el user en el diccionario (borrar cuando se agregue db)
     if user in usuarios.keys():
+        #cargo secret key que le corresponde a este user
         secret_key_user = usuarios[user]
+        #si existe el pin, osea que me pasaron un pin
         if pin:
+            #si existe la secret key
             if (secret_key_user):
+                #creo el objecto de tipo top que corresponde con el user que me pasaron
                 totp = pyotp.TOTP(secret_key_user)
+                #verifico si el pin del usuario coincide con el de mi objeto en este tiempo y retorno
                 return str(totp.verify(pin))
+            else:
+                return "Error"
         else:
             return "Ingrese un pin a validar"
     else:
