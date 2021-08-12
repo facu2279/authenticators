@@ -12,6 +12,7 @@
 #Importo librerias necesarias
 
 from datetime import datetime
+import re
 import pyotp
 from flask import *
 app = Flask(__name__)
@@ -71,36 +72,37 @@ Retorno un string para generar qr
 """
 @app.route("/lorenzo/generar_usuario", methods=["GET", "POST"])
 def b():
-    #print("entre por post")
-    #creo el diccionario para ir guardando los datos y desp hacer consulta sql
-    dict_to_bdd = {}
-    #capturo el user que me pasan por url
-    
-    
-    user = str(request.args.get('user'))
-    #user = request.form['user']
-    #chequeo que exista el usuario en mis usuarios registrados
-    if user in usuarios.keys():
-        #si existe, no lo creo y retorno mensaje
-        return "Este usuario ya tiene un qr activo"
+
+    if request.method == "POST":
+        #print("entre por post")
+        #creo el diccionario para ir guardando los datos y desp hacer consulta sql
+        dict_to_bdd = {}
+        #user = str(request.args.get('user'))
+        user = request.form['usuario']
+        #chequeo que exista el usuario en mis usuarios registrados
+        if user in usuarios.keys():
+            #si existe, no lo creo y retorno mensaje
+            return "Este usuario ya tiene un qr activo"
+        else:
+            #si el usuario no existe le genero una secret key random en base32
+            secret_key = pyotp.random_base32()
+            #genero el codigo qr para este usuario
+            qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
+            #guardo datos en el diccionario para despues guardar en base de datos
+            dict_to_bdd['user'] = user
+            dict_to_bdd['secret_key'] = str(secret_key)
+            dict_to_bdd['qr'] = qr
+            #fecha de creacion (actual)
+            fecha = datetime.now()
+            #cambio el formato de la fecha para que sea compatible con la de sql
+            fecha = fecha.strftime("%Y-%m-%d")
+            dict_to_bdd['fecha'] = fecha
+            #dejar esto para poder tener usuarios registrados hasta que no se agregue bdd
+            usuarios[user] = secret_key
+            print(dict_to_bdd)
+            return render_template('generado.html', qr=qr)
     else:
-        #si el usuario no existe le genero una secret key random en base32
-        secret_key = pyotp.random_base32()
-        #genero el codigo qr para este usuario
-        qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
-        #guardo datos en el diccionario para despues guardar en base de datos
-        dict_to_bdd['user'] = user
-        dict_to_bdd['secret_key'] = str(secret_key)
-        dict_to_bdd['qr'] = qr
-        #fecha de creacion (actual)
-        fecha = datetime.now()
-        #cambio el formato de la fecha para que sea compatible con la de sql
-        fecha = fecha.strftime("%Y-%m-%d")
-        dict_to_bdd['fecha'] = fecha
-        #dejar esto para poder tener usuarios registrados hasta que no se agregue bdd
-        usuarios[user] = secret_key
-        print(dict_to_bdd)
-        return render_template('index.html', qr=qr)
+        return render_template('generar_nuevo.html')
 
 @app.route("/lorenzo/print", methods=["GET", "POST"])
 def c():
