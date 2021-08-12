@@ -2,10 +2,11 @@
 *******************************************************************
 ***  Made by Facundo Diaz - August 2021                         ***
 ***                                                             ***
-***  Documentation abour PyOTP Library                          ***
+***  Documentation about PyOTP Library                          ***
 ***  https://pyauth.github.io/pyotp/                            ***
 ***                                                             ***
-***                                                             ***
+***  Online qr generator                                        ***
+***  https://www.the-qrcode-generator.com/                      ***
 *******************************************************************
 ****************************************************************"""
 #Importo librerias necesarias
@@ -17,10 +18,10 @@ app = Flask(__name__)
 
 # diccionario de prueba para hacer testeos hasta agregar database
 usuarios = {
-    "caraque":"2U5EFSHZEYUE5KLL56H2DASNLMUT3HJN",
-    "fadiaz":"XAD7IP5YHH5S7ML5DPZJI55D6JBLSKEY",
-    "pepe":"WN3TNXM75D5N234NHFTDXSDFCGWRYCTM",
-    "scalvete":"AE7ZT2QLKLY2WR4NJM3ID3FG3O5BGNSF",
+    "fdiaz":"2U5EFSHZEYUE5KLL56H2DASNLMUT3HJN",
+    "test1":"XAD7IP5YHH5S7ML5DPZJI55D6JBLSKEY",
+    "test2":"WN3TNXM75D5N234NHFTDXSDFCGWRYCTM",
+    "test3":"AE7ZT2QLKLY2WR4NJM3ID3FG3O5BGNSF",
     "TESTING": "VLGAJEKSHSQ4HOYNLOX4TT6CYNBXZLRF"
     }
 
