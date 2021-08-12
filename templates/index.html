@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/qrcode.js"></script>
+</head>
+<body>
+<h1>El qr generado es: {{qr}}</h1>
+<form onsubmit="generate();return false;">
+	<input type="text" id="qr" name="" value={{qr}}>
+</form>
+
+<div id="qrResult" style="height: 100px;width: 100px">
+	
+</div>
+
+<script type="text/javascript">
+	var qrcode=new QRCode(document.getElementById('qrResult'),{
+		width:250,
+		height:250
+	});
+
+function generate(){
+	var message=document.getElementById('qr');
+	if(!message.value){
+		alert("Input a text");
+		message.focus();
+		return;
+	}
+
+	qrcode.makeCode(message.value);
+}
+
+</script>
+
+</body>
+</html>
