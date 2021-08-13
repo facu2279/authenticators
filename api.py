@@ -11,16 +11,20 @@
 #Importo librerias necesarias
 
 from datetime import datetime
-import re
+from flask_mysqldb import MySQL
 import pyotp
 from flask import *
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'test'
+app.config['MYSQL_DB'] = 'testing'
+mysql = MySQL(app)
 # diccionario de prueba para hacer testeos hasta agregar database
 usuarios = {
-    "fdiaz":"2U5EFSHZEYUE5KLL56H2DASNLMUT3HJN",
     "test1":"XAD7IP5YHH5S7ML5DPZJI55D6JBLSKEY",
     "test2":"WN3TNXM75D5N234NHFTDXSDFCGWRYCTM",
     "test3":"AE7ZT2QLKLY2WR4NJM3ID3FG3O5BGNSF",
@@ -51,31 +55,51 @@ def a():
         return "Usuario no valido"
 
 """ """
-@app.route("/test/generar_usuario", methods=["POST"])
-def bebe():
- 
-    if request.method == "POST":
-        dict_to_bdd = {}
-        user = str(request.args.get('user'))
-        # user = request.form['usuario']
-        if user in usuarios.keys():
-            return "Este usuario ya tiene un qr activo"
-        else:
-            secret_key = pyotp.random_base32()
-            qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
-            dict_to_bdd['user'] = user
-            dict_to_bdd['secret_key'] = str(secret_key)
-            dict_to_bdd['qr'] = qr
-            fecha = datetime.now()
-            fecha = fecha.strftime("%Y-%m-%d")
-            dict_to_bdd['fecha'] = fecha
-            usuarios[user] = secret_key
-            print(dict_to_bdd)
-            return str(qr)
+@app.route("/test/generar_usuario", methods=["GET", "POST"])
+def b():
+    dict_to_bdd = {}
+    user = str(request.args.get('user'))
+    # user = request.form['usuario']
+    if user in usuarios.keys():
+        return "Este usuario ya tiene un qr activo"
+    else:
+        secret_key = pyotp.random_base32()
+        qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
+        dict_to_bdd['user'] = user
+        dict_to_bdd['secret_key'] = str(secret_key)
+        dict_to_bdd['qr'] = qr
+        fecha = datetime.now()
+        fecha = fecha.strftime("%Y-%m-%d")
+        dict_to_bdd['fecha'] = fecha
+        usuarios[user] = secret_key
+        guardar_usuario(dict_to_bdd)
+        return str(qr)
 
-@app.route("/lorenzo/print", methods=["GET", "POST"])
+""" """
+@app.route("/test/login", methods=["GET", "POST"])
 def c():
-    return usuarios
+    user = str(request.args.get('user'))
+    password = str(request.args.get('password'))
+    if user == "test":
+        if password == "test":
+            return "true"
+    
+    return "error"
+
+""" DATABASE SECTION """
+def guardar_usuario(dict):
+    sql = "INSERT INTO usuarios_qr (usuario, secret_key, qr, fecha) VALUES ('" + dict['user'] + "', '" + dict['secret_key'] + "', '" + dict['qr'] + "', '" + dict['fecha'] + "');"
+    print(sql)
+    consulta = mysql.connection.cursor()
+    res = consulta.execute(sql)
+    print(res)
+
+def cargar_usuarios():
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT * FROM usuarios;")
+    resultado = consulta.fetchall()
+    for i in resultado:
+        print(i)
 
 # running flask server
 if __name__ == "__main__":
