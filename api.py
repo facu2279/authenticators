@@ -35,6 +35,8 @@
 
 #Importo libraries
 from datetime import datetime
+import string
+import random
 from flask_mysqldb import MySQL
 import pyotp
 from flask import *
@@ -280,6 +282,12 @@ def des(s):
         s = enc(s)
     return s
 
+"""
+
+"""
+def generar_token_temp():
+    length_of_string = 16
+    print(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length_of_string)))
 
 """****************************
 
