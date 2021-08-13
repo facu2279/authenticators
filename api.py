@@ -30,8 +30,9 @@
 ***                                                                   ***
 *************************************************************************
 **********************************************************************"""
-#Importo librerias necesarias
 
+
+#Importo libraries
 from datetime import datetime
 from flask_mysqldb import MySQL
 import pyotp
@@ -65,11 +66,20 @@ def index():
 
 
 
-"""***********************
+"""***************************************************************************
 
 VALIDATE PIN
+-------------------------
+This end point receives the user and the pin by parameter, 
+checks that they are not empty or null, then we bring the secret
+key corresponding to that user from the database,
+then we generate the totp object with that secret key and verify the pin
+that the user passed us at that moment against the
+one that has our object at this moment, 
+if they coincide, return True, otherwise, return False, 
+if any of the data to check is missing or invalid return Error
 
-***********************"""
+******************************************************************************"""
 @app.route("/test/validar_pin", methods=["GET", "POST"])
 def a():
     # user = request.form['user']
@@ -93,11 +103,20 @@ def a():
         return "Error"
 
 
-"""***********************
+"""****************************************************************************
 
 GENERATE A NEW USER
+---------------------
+This endpoint receives the user for whom we want to generate a qr,
+we check that it is not empty or null,
+then we check that that user does not have an active qr,
+if it exists in our system we return that it already has a qr in use,
+otherwise we generate it one. We generate a random secret key in base32
+then we generate the prompt url for the qr,
+we save the necessary data, user, secret key, qr, and the current date,
+then we save it in the database and return the generated qr for the user scan
 
-***********************"""
+********************************************************************************"""
 @app.route("/test/generar_usuario", methods=["GET", "POST"])
 def b():
     usuario_a_guardar = {}
@@ -121,11 +140,17 @@ def b():
     else:
         return "Error"
 
-"""***********************
+"""*************************************************************************
 
 LOGIN
+-----------
+This endpoint receives user and password by parameter,
+we check that they are not empty or null, then we bring
+the password that corresponds to that user from the database,
+if it matches, return True,
+if they do not match or any of the checks are not successful, it returns False
 
-***********************"""
+*****************************************************************************"""
 
 @app.route("/test/login", methods=["GET", "POST"])
 def c():
@@ -138,6 +163,36 @@ def c():
         if password == pass_bdd:
             return "True"
     return "False"
+
+"""********************************************************************************
+
+MAKE NEW ADMIN
+------------------------
+This endpoint receives by parameter the username
+and password of the new system administrator that you want
+to create, it is checked that it is not empty or null,
+then it is checked that there is not an equal user registered in the database,
+if it does not exist, we encrypt the password and save the new user in the database
+and then return success, if any of the checks fails or there is a user
+with that name, it returns Error
+
+**********************************************************************************"""
+
+@app.route("/test/generar_admin", methods=["GET", "POST"])
+def d():
+    # user = request.form['usuario']
+    # password = request.form['password']
+    user = str(request.args.get('user'))
+    password = str(request.args.get('password'))
+    if user != "" and user != None and password != "" and password != None:
+        resultado = chequear_admin_existente(user)
+        if resultado:
+            return "Error"
+        else:
+            password = enc(password)
+            guardar_admin(user, password)
+            return "Success"
+    return "Error"
 
 
 """********************************
@@ -189,6 +244,24 @@ def chequear_existente(user):
     consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
     return resultado
+
+"""
+
+"""
+def chequear_admin_existente(user):
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT * FROM usuarios WHERE usuario='" + user + "';")
+    resultado = consulta.fetchall()
+    return resultado
+
+"""
+
+"""
+def guardar_admin(user, password):
+    sql = "INSERT INTO usuarios (usuario, password) VALUES ('" + user + "', '" + password + "');"
+    consulta = mysql.connection.cursor()
+    consulta.execute(sql)
+    mysql.connection.commit()
 
 """
 

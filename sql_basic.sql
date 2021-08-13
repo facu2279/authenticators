@@ -9,10 +9,8 @@ CREATE TABLE `usuarios` (
 
 
 INSERT INTO `usuarios` (`id`, `usuario`, `password`) VALUES
-(1, 'fadiaz@zonamerica.com', 'qjwehhaxxa'),
-(2, 'caraque@zonamerica.com', 'eiy123'),
-(3, 'sfelix@zonamerica.com', 'eiy123'),
-(6, 'scalvete@zonamerica.com', 'qjwehhaxxa');
+(1, 'fadiaz@hola.com', 'qjwehhaxxa'),
+(2, 'caraque@hola.com', 'eiy123');
 
 
 CREATE TABLE `usuarios_qr` (
