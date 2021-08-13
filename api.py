@@ -106,7 +106,7 @@ def b():
     user = str(request.args.get('user'))
     if user != "" and user != None:
         resultado = chequear_existente(user)
-        if resultado != "":
+        if resultado:
             return user +  " ya tiene un qr activo"
         else:
             secret_key = pyotp.random_base32()
@@ -185,7 +185,6 @@ def traer_password(user):
 
 """
 def chequear_existente(user):
-    resultado = ""
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
