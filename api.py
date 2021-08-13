@@ -5,7 +5,8 @@
 *** END-POINTS: 1- /test/validar_pin                                  ***
 ***             2- /test/generar_usuario                              ***
 ***             3- /test/login                                        ***
-***             4- /test                                              ***
+***             4- /test/generar_admin                                ***
+***             5- /test                                              ***
 ***                                                                   ***
 ***                                                                   ***
 ***                                                                   ***
