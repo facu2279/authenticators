@@ -2,6 +2,11 @@
 *************************************************************************
 ***  Made by Facundo Diaz - August 2021                               ***
 ***                                                                   ***
+*** END-POINTS: 1- /test/validar_pin                                  ***
+***             2- /test/generar_usuario                              ***
+***             3- /test/login                                        ***
+***             4- /test                                              ***
+***                                                                   ***
 ***                                                                   ***
 ***                                                                   ***
 ***  PyOTP Library Documentation                                      ***
