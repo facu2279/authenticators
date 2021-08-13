@@ -19,17 +19,13 @@ app = Flask(__name__)
 CORS(app)
 
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_USER'] = 'test'
 app.config['MYSQL_PASSWORD'] = 'test'
 app.config['MYSQL_DB'] = 'testing'
 mysql = MySQL(app)
 # diccionario de prueba para hacer testeos hasta agregar database
-usuarios = {
-    "test1":"XAD7IP5YHH5S7ML5DPZJI55D6JBLSKEY",
-    "test2":"WN3TNXM75D5N234NHFTDXSDFCGWRYCTM",
-    "test3":"AE7ZT2QLKLY2WR4NJM3ID3FG3O5BGNSF",
-    "TESTING": "VLGAJEKSHSQ4HOYNLOX4TT6CYNBXZLRF"
-    }
+
+administradores = {}
 
 # homepage route to check
 @app.route("/")
@@ -37,12 +33,15 @@ def index():
     return "Online"
 
 """ """
-@app.route("/test/validar_pin", methods=["POST"])
+@app.route("/test/validar_pin", methods=["GET", "POST"])
 def a():
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
-    if user in usuarios.keys():
-        secret_key_user = usuarios[user]
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT secret_key FROM usuarios_qr WHERE usuario='" + user + "';")
+    resultado = consulta.fetchall()
+    if resultado:
+        secret_key_user = str(resultado[0][0])
         if pin:
             if (secret_key_user):
                 totp = pyotp.TOTP(secret_key_user)
@@ -59,9 +58,11 @@ def a():
 def b():
     dict_to_bdd = {}
     user = str(request.args.get('user'))
-    # user = request.form['usuario']
-    if user in usuarios.keys():
-        return "Este usuario ya tiene un qr activo"
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
+    resultado = consulta.fetchall()
+    if resultado:
+        return user +  " ya tiene un qr activo"
     else:
         secret_key = pyotp.random_base32()
         qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
@@ -71,7 +72,6 @@ def b():
         fecha = datetime.now()
         fecha = fecha.strftime("%Y-%m-%d")
         dict_to_bdd['fecha'] = fecha
-        usuarios[user] = secret_key
         guardar_usuario(dict_to_bdd)
         return str(qr)
 
@@ -80,26 +80,25 @@ def b():
 def c():
     user = str(request.args.get('user'))
     password = str(request.args.get('password'))
-    if user == "test":
-        if password == "test":
-            return "true"
+
+    if user != "" and user != None and password != "" and password != None:
+        consulta = mysql.connection.cursor()
+        consulta.execute("SELECT * FROM usuarios;")
+        resultado = consulta.fetchall()
+        for i in resultado:
+            administradores[i[1]] = i[2]
+        if user in administradores:
+            if password == administradores[user]:
+                return "True"
     
-    return "error"
+    return "False"
 
 """ DATABASE SECTION """
 def guardar_usuario(dict):
     sql = "INSERT INTO usuarios_qr (usuario, secret_key, qr, fecha) VALUES ('" + dict['user'] + "', '" + dict['secret_key'] + "', '" + dict['qr'] + "', '" + dict['fecha'] + "');"
-    print(sql)
     consulta = mysql.connection.cursor()
-    res = consulta.execute(sql)
-    print(res)
-
-def cargar_usuarios():
-    consulta = mysql.connection.cursor()
-    consulta.execute("SELECT * FROM usuarios;")
-    resultado = consulta.fetchall()
-    for i in resultado:
-        print(i)
+    consulta.execute(sql)
+    mysql.connection.commit()
 
 # running flask server
 if __name__ == "__main__":
