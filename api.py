@@ -54,7 +54,6 @@ app.config['MYSQL_DB'] = 'testing'
 mysql = MySQL(app)
 
 
-
 """*****************************
 
 HOME - CHECK IF SERVER IS ONLINE
@@ -179,6 +178,7 @@ def traer_password(user):
     resultado = consulta.fetchall()
     if resultado:
         resultado = resultado[0][0]
+        resultado = des(resultado)
     return str(resultado)
 
 """
@@ -189,6 +189,23 @@ def chequear_existente(user):
     consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
     return resultado
+
+"""
+
+"""
+def enc(s):
+    chars = "qwertyuioplkjhgfdsazxcvbnm"
+    trans = chars[10:]+chars[:10]
+    caracter = lambda c: trans[chars.find(c)] if chars.find(c)>-1 else c
+    return ''.join( caracter(c) for c in s ) 
+"""
+
+"""
+def des(s):
+    for i in range(0,12):
+        s = enc(s)
+    return s
+
 
 """****************************
 
