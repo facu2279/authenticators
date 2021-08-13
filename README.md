@@ -1,6 +1,8 @@
 # Python two-factor authenticator API
 
 Simple REST API to generate qr codes for two-step authentication, usable for microsoft authenticator, google authenticator and others like it. It also contains a login to control who accesses to generate the qr codes.
+<img src="images/microsoft.jpg" width="330" height="100"/>
+<img src="images/google.jpg" width="325" height="100"/>
 <br><br>
 
 ## ENDPOINTS
