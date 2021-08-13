@@ -77,21 +77,24 @@ def a():
     # pin = request.form['pin']
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
-    consulta = mysql.connection.cursor()
-    consulta.execute("SELECT secret_key FROM usuarios_qr WHERE usuario='" + user + "';")
-    resultado = consulta.fetchall()
-    if resultado:
-        secret_key_user = str(resultado[0][0])
-        if pin:
-            if (secret_key_user):
-                totp = pyotp.TOTP(secret_key_user)
-                return str(totp.verify(pin))
+    if user != "" and user != None:
+        consulta = mysql.connection.cursor()
+        consulta.execute("SELECT secret_key FROM usuarios_qr WHERE usuario='" + user + "';")
+        resultado = consulta.fetchall()
+        if resultado:
+            secret_key_user = str(resultado[0][0])
+            if pin != "" and pin != None:
+                if (secret_key_user):
+                    totp = pyotp.TOTP(secret_key_user)
+                    return str(totp.verify(pin))
+                else:
+                    return "Error"
             else:
                 return "Error"
         else:
-            return "Ingrese un pin a validar"
+            return "Error"
     else:
-        return "Usuario no valido"
+        return "Error"
 
 
 """***********************
@@ -104,20 +107,23 @@ def b():
     usuario_a_guardar = {}
     # user = request.form['usuario']
     user = str(request.args.get('user'))
-    resultado = chequear_existente(user)
-    if resultado:
-        return user +  " ya tiene un qr activo"
+    if user != "" and user != None:
+        resultado = chequear_existente(user)
+        if resultado:
+            return user +  " ya tiene un qr activo"
+        else:
+            secret_key = pyotp.random_base32()
+            qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
+            usuario_a_guardar['user'] = user
+            usuario_a_guardar['secret_key'] = str(secret_key)
+            usuario_a_guardar['qr'] = qr
+            fecha = datetime.now()
+            fecha = fecha.strftime("%Y-%m-%d")
+            usuario_a_guardar['fecha'] = fecha
+            guardar_usuario(usuario_a_guardar)
+            return str(qr)
     else:
-        secret_key = pyotp.random_base32()
-        qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
-        usuario_a_guardar['user'] = user
-        usuario_a_guardar['secret_key'] = str(secret_key)
-        usuario_a_guardar['qr'] = qr
-        fecha = datetime.now()
-        fecha = fecha.strftime("%Y-%m-%d")
-        usuario_a_guardar['fecha'] = fecha
-        guardar_usuario(usuario_a_guardar)
-        return str(qr)
+        return "Error"
 
 """***********************
 
