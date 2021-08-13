@@ -1,13 +1,30 @@
-"""****************************************************************
-*******************************************************************
-***  Made by Facundo Diaz - August 2021                         ***
-***                                                             ***
-***  Documentation about PyOTP Library                          ***
-***  https://pyauth.github.io/pyotp/                            ***
-***                                                             ***
-***                                                             ***
-*******************************************************************
-****************************************************************"""
+"""**********************************************************************
+*************************************************************************
+***  Made by Facundo Diaz - August 2021                               ***
+***                                                                   ***
+***                                                                   ***
+***                                                                   ***
+***  PyOTP Library Documentation                                      ***
+***  https://pyauth.github.io/pyotp/                                  ***
+***                                                                   ***
+***                                                                   ***
+***  Flask’s documentation                                            ***
+***  https://flask.palletsprojects.com/en/2.0.x/                      ***
+***                                                                   ***
+***                                                                   ***
+***  Flask-MySQLdb’s documentation                                    ***
+***  https://docs.python.org/3/library/datetime.html                  ***
+***                                                                   ***
+***                                                                   ***
+***  Flask-CORS                                                       ***
+***  https://flask-cors.readthedocs.io/en/latest/                     ***
+***                                                                   ***
+***                                                                   ***
+***  datetime — Basic date and time types                             ***
+***  https://docs.python.org/3/library/datetime.html                  ***
+***                                                                   ***
+*************************************************************************
+**********************************************************************"""
 #Importo librerias necesarias
 
 from datetime import datetime
@@ -18,23 +35,42 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+# diccionario vacio para cargar users luego
+administradores = {}
+
+"""***********************
+
+CONFIGURACION DE CONEXION CON BASE DE DATOS
+
+***********************"""
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'test'
 app.config['MYSQL_PASSWORD'] = 'test'
 app.config['MYSQL_DB'] = 'testing'
 mysql = MySQL(app)
-# diccionario de prueba para hacer testeos hasta agregar database
 
-administradores = {}
 
-# homepage route to check
-@app.route("/")
+
+"""***********************
+
+HOME - CHECK IF SERVER IS ONLINE
+
+***********************"""
+@app.route("/test")
 def index():
     return "Online"
 
-""" """
+
+
+"""***********************
+
+VALIDATE PIN
+
+***********************"""
 @app.route("/test/validar_pin", methods=["GET", "POST"])
 def a():
+    # user = request.form['user']
+    # pin = request.form['pin']
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
     consulta = mysql.connection.cursor()
@@ -53,38 +89,46 @@ def a():
     else:
         return "Usuario no valido"
 
-""" """
+
+"""***********************
+
+GENERATE A NEW USER
+
+***********************"""
 @app.route("/test/generar_usuario", methods=["GET", "POST"])
 def b():
-    dict_to_bdd = {}
+    usuario_a_guardar = {}
+    # user = request.form['usuario']
     user = str(request.args.get('user'))
-    consulta = mysql.connection.cursor()
-    consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
-    resultado = consulta.fetchall()
+    resultado = chequear_existente(user)
     if resultado:
         return user +  " ya tiene un qr activo"
     else:
         secret_key = pyotp.random_base32()
         qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
-        dict_to_bdd['user'] = user
-        dict_to_bdd['secret_key'] = str(secret_key)
-        dict_to_bdd['qr'] = qr
+        usuario_a_guardar['user'] = user
+        usuario_a_guardar['secret_key'] = str(secret_key)
+        usuario_a_guardar['qr'] = qr
         fecha = datetime.now()
         fecha = fecha.strftime("%Y-%m-%d")
-        dict_to_bdd['fecha'] = fecha
-        guardar_usuario(dict_to_bdd)
+        usuario_a_guardar['fecha'] = fecha
+        guardar_usuario(usuario_a_guardar)
         return str(qr)
 
-""" """
+"""***********************
+
+LOGIN
+
+***********************"""
+
 @app.route("/test/login", methods=["GET", "POST"])
 def c():
+    # user = request.form['usuario']
+    # password = request.form['password']
     user = str(request.args.get('user'))
     password = str(request.args.get('password'))
-
     if user != "" and user != None and password != "" and password != None:
-        consulta = mysql.connection.cursor()
-        consulta.execute("SELECT * FROM usuarios;")
-        resultado = consulta.fetchall()
+        resultado = traer_usuarios()
         for i in resultado:
             administradores[i[1]] = i[2]
         if user in administradores:
@@ -93,14 +137,37 @@ def c():
     
     return "False"
 
-""" DATABASE SECTION """
+
+"""********************************
+
+DATABASE SECTION
+
+*************************************"""
+
+
 def guardar_usuario(dict):
     sql = "INSERT INTO usuarios_qr (usuario, secret_key, qr, fecha) VALUES ('" + dict['user'] + "', '" + dict['secret_key'] + "', '" + dict['qr'] + "', '" + dict['fecha'] + "');"
     consulta = mysql.connection.cursor()
     consulta.execute(sql)
     mysql.connection.commit()
 
-# running flask server
+def traer_usuarios():
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT * FROM usuarios;")
+    resultado = consulta.fetchall()
+    return resultado
+
+def chequear_existente(user):
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
+    resultado = consulta.fetchall()
+    return resultado
+
+"""****************************
+
+RUNNING FLASK SERVICES
+
+*****************************"""
 if __name__ == "__main__":
     # para correr en localhost usar este
     app.run(host='0.0.0.0')
