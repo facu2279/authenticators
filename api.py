@@ -41,11 +41,12 @@ app = Flask(__name__)
 CORS(app)
 
 
-"""***********************
+"""***********************************
 
-CONFIGURACION DE CONEXION CON BASE DE DATOS
+SET VARIABLES TO CONNECT WITH DATABASE
 
-***********************"""
+***********************************"""
+
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'test'
 app.config['MYSQL_PASSWORD'] = 'test'
@@ -54,11 +55,11 @@ mysql = MySQL(app)
 
 
 
-"""***********************
+"""*****************************
 
 HOME - CHECK IF SERVER IS ONLINE
 
-***********************"""
+*****************************"""
 @app.route("/test")
 def index():
     return "Online"
