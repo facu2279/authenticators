@@ -135,7 +135,6 @@ def c():
         pass_bdd = traer_usuario(user)
         if password == pass_bdd:
             return "True"
-    
     return "False"
 
 
@@ -145,13 +144,18 @@ DATABASE SECTION
 
 *************************************"""
 
+"""
 
+"""
 def guardar_usuario(dict):
     sql = "INSERT INTO usuarios_qr (usuario, secret_key, qr, fecha) VALUES ('" + dict['user'] + "', '" + dict['secret_key'] + "', '" + dict['qr'] + "', '" + dict['fecha'] + "');"
     consulta = mysql.connection.cursor()
     consulta.execute(sql)
     mysql.connection.commit()
 
+"""
+
+"""
 def traer_usuario(user):
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT password FROM usuarios WHERE usuario='" + user + "';")
@@ -159,6 +163,9 @@ def traer_usuario(user):
     resultado = resultado[0][0]
     return str(resultado)
 
+"""
+
+"""
 def chequear_existente(user):
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
