@@ -35,8 +35,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# diccionario vacio para cargar users luego
-administradores = {}
 
 """***********************
 
@@ -128,12 +126,9 @@ def c():
     user = str(request.args.get('user'))
     password = str(request.args.get('password'))
     if user != "" and user != None and password != "" and password != None:
-        resultado = traer_usuarios()
-        for i in resultado:
-            administradores[i[1]] = i[2]
-        if user in administradores:
-            if password == administradores[user]:
-                return "True"
+        pass_bdd = traer_usuario(user)
+        if password == pass_bdd:
+            return "True"
     
     return "False"
 
@@ -151,11 +146,12 @@ def guardar_usuario(dict):
     consulta.execute(sql)
     mysql.connection.commit()
 
-def traer_usuarios():
+def traer_usuario(user):
     consulta = mysql.connection.cursor()
-    consulta.execute("SELECT * FROM usuarios;")
+    consulta.execute("SELECT password FROM usuarios WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
-    return resultado
+    resultado = resultado[0][0]
+    return str(resultado)
 
 def chequear_existente(user):
     consulta = mysql.connection.cursor()
