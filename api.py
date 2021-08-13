@@ -78,11 +78,8 @@ def a():
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
     if user != "" and user != None:
-        consulta = mysql.connection.cursor()
-        consulta.execute("SELECT secret_key FROM usuarios_qr WHERE usuario='" + user + "';")
-        resultado = consulta.fetchall()
-        if resultado:
-            secret_key_user = str(resultado[0][0])
+        secret_key_user = traer_secret_key(user)
+        if secret_key_user != "" and secret_key_user != None:
             if pin != "" and pin != None:
                 if (secret_key_user):
                     totp = pyotp.TOTP(secret_key_user)
@@ -109,7 +106,7 @@ def b():
     user = str(request.args.get('user'))
     if user != "" and user != None:
         resultado = chequear_existente(user)
-        if resultado:
+        if resultado != "":
             return user +  " ya tiene un qr activo"
         else:
             secret_key = pyotp.random_base32()
@@ -138,7 +135,7 @@ def c():
     user = str(request.args.get('user'))
     password = str(request.args.get('password'))
     if user != "" and user != None and password != "" and password != None:
-        pass_bdd = traer_usuario(user)
+        pass_bdd = traer_password(user)
         if password == pass_bdd:
             return "True"
     return "False"
@@ -149,6 +146,19 @@ def c():
 DATABASE SECTION
 
 *************************************"""
+
+
+"""
+
+"""
+def traer_secret_key(user):
+    resultado = ""
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT secret_key FROM usuarios_qr WHERE usuario='" + user + "';")
+    resultado = consulta.fetchall()
+    if resultado:
+        resultado = str(resultado[0][0])
+    return resultado
 
 """
 
@@ -162,17 +172,20 @@ def guardar_usuario(dict):
 """
 
 """
-def traer_usuario(user):
+def traer_password(user):
+    resultado = ""
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT password FROM usuarios WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
-    resultado = resultado[0][0]
+    if resultado:
+        resultado = resultado[0][0]
     return str(resultado)
 
 """
 
 """
 def chequear_existente(user):
+    resultado = ""
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
