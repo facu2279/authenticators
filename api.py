@@ -85,10 +85,11 @@ if any of the data to check is missing or invalid return Error
 ******************************************************************************"""
 @app.route("/test/validar_pin", methods=["GET", "POST"])
 def a():
-    # user = request.form['user']
-    # pin = request.form['pin']
+    #user = request.form['user']
+    #pin = request.form['pin']
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
+
     if user != "" and user != None:
         secret_key_user = traer_secret_key(user)
         if secret_key_user != "" and secret_key_user != None:

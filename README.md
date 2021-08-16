@@ -34,6 +34,10 @@ Example
 ```
 http://localhost/test/validar_pin?user=facu2279&pin=123456
 ```
+Return
+```
+True or False or Error
+```
 <br>
 
 
