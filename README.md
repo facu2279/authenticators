@@ -1,6 +1,6 @@
 # Python two-factor authenticator API
 
-Simple REST API to generate qr codes for two-step authentication, usable for microsoft authenticator, google authenticator and others like it. It also contains a login to control who accesses to generate the qr codes.
+Simple REST API to generate qr codes for two-step authentication, usable for Microsoft authenticator, Google authenticator and others like it. It also contains a login to control who accesses to generate the qr codes.
 
 <br><br>
 
@@ -27,6 +27,7 @@ Wait for the following parameters by POST method:
 
 ```
 user=facu2279
+
 pin=123456
 ```
 Example
@@ -93,6 +94,7 @@ Wait for the following parameters by POST method:
 
 ```
 user=facu2279
+
 password=hola123
 ```
 Example request
@@ -101,11 +103,7 @@ http://localhost/test/login?user=facu2279&password=hola123
 ```
 Return
 ```
-True
-```
-or
-```
-False
+True or False
 ```
 <br>
 --------------------------------------------
@@ -126,8 +124,9 @@ with that name, it returns Error
 Wait for the following parameters by POST method:
 
 ```
-user=facu2279
-password=hola123
+user = facu2279
+
+password = hola123
 ```
 Example request
 ```
@@ -135,20 +134,24 @@ http://localhost/test/generar_admin?user=facu2279&password=hola123
 ```
 Return
 ```
-Success
-```
-or
-```
-Error
+Success or Error
 ```
 <br>
 
 ## Storage
-To create your database I recommend you download [MySQL](https://dev.mysql.com/downloads/installer/) and then run the sql file called sql_basic.sql to use this api with preloaded test data
 
 <br>
 
+To create your database I recommend you download [MySQL](https://dev.mysql.com/downloads/installer/) and then run the sql file called sql_basic.sql to use this api with preloaded test data
+
+<br>
+<img src="images/mysql.jpg" width="300"/>
+
+<br><br>
+
 ## Necessary libraries
+
+It is necessary that you install all these libraries to be able to run this api
 
 - [PyOTP Library](https://pyauth.github.io/pyotp/)
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/)
@@ -158,7 +161,4 @@ To create your database I recommend you download [MySQL](https://dev.mysql.com/d
 
 ## Authors
 Made by [Facundo Diaz](https://github.com/facu2279)
-
-Social Networks
--------------------
 - [Linkedin](https://www.linkedin.com/)

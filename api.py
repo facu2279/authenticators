@@ -170,7 +170,8 @@ def c():
     if user != "" and user != None and password != "" and password != None:
         pass_bdd = traer_password(user)
         if password == pass_bdd:
-            payload_data = {"user": user}
+            payload_data = {"user": user,
+                            "estado": True}
             token = jwt.encode(payload=payload_data, key='hola')
             return token
     return "False"
