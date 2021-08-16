@@ -117,7 +117,7 @@ def a():
 
 """****************************************************************************
 
-GENERATE A NEW USER
+GENERATE A NEW QR
 ---------------------
 This endpoint receives the user for whom we want to generate a qr,
 we check that it is not empty or null,
@@ -151,8 +151,42 @@ def b():
             usuario_a_guardar['fecha'] = fecha
             guardar_usuario(usuario_a_guardar)
             return str(qr)
-    else:
-        return "Error"
+    return "Error"
+
+
+"""****************************************************************************
+
+MODIFY QR
+---------------------
+
+This endpoint receives by parameter the username to which
+we want to generate a new qr, we check that there is a user with that name,
+we generate all the necessary data as in the / test / generate_user,
+but the function that we call the database, it is an update and not an insert
+
+********************************************************************************"""
+@app.route("/test/modificar_usuario", methods=["GET", "POST"])
+def e():
+    usuario_a_guardar = {}
+    # If the data is passed to me through parameters inside the data section in the request, use this line
+    # user = request.form['usuario']
+    # If the data is passed to me by url, use this line
+    user = str(request.args.get('user'))
+    print(user)
+    if user != "" and user != None:
+        resultado = chequear_existente(user)
+        if resultado:
+            secret_key = pyotp.random_base32()
+            qr = str(pyotp.totp.TOTP(secret_key).provisioning_uri(name=user, issuer_name="App_Testing"))
+            usuario_a_guardar['user'] = user
+            usuario_a_guardar['secret_key'] = str(secret_key)
+            usuario_a_guardar['qr'] = qr
+            fecha = datetime.now()
+            fecha = fecha.strftime("%Y-%m-%d")
+            usuario_a_guardar['fecha'] = fecha
+            modificar_qr(usuario_a_guardar)
+            return str(qr)
+    return "Error"
 
 """*************************************************************************
 
@@ -273,6 +307,19 @@ def chequear_existente(user):
     consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
     return resultado
+
+
+"""
+
+This function updates the new qr data in the database
+
+"""
+def modificar_qr(usuario):
+    sql = "UPDATE usuarios_qr SET qr='" + usuario['qr'] + "', fecha='" + usuario['fecha'] + "', secret_key='" + usuario['secret_key'] + "'"
+    sql += "WHERE usuario='" + usuario['user'] + "'"
+    consulta = mysql.connection.cursor()
+    consulta.execute(sql)
+    mysql.connection.commit()
 
 """
 

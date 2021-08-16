@@ -41,7 +41,7 @@ True or False or Error
 <br>
 
 
-#### GENERATE A NEW USER
+#### GENERATE A NEW QR
 
 - This endpoint receives the user for whom we want to generate a qr,
 we check that it is not empty or null,
