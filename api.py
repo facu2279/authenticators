@@ -37,7 +37,8 @@
 **********************************************************************"""
 
 
-#Importo libraries
+# IMPORT LIBRARIES
+
 from datetime import datetime
 import string
 import random
@@ -324,8 +325,8 @@ RUNNING FLASK SERVICES
 
 *****************************"""
 if __name__ == "__main__":
-    # para correr en localhost usar este
+    # to run on localhost use this
     app.run(host='0.0.0.0')
-    # para correr en servidor usar este
+    # to run on server, use this
     #app.run(host='0.0.0.0, port=8080)
     
