@@ -11,7 +11,7 @@ Simple REST API to generate qr codes for two-step authentication, usable for mic
 ## ENDPOINTS
 <br>
 
-VALIDATE PIN
+#### VALIDATE PIN
 
 - This end point receives the user and the pin by parameter, 
 checks that they are not empty or null, then we bring the secret
@@ -24,7 +24,7 @@ if any of the data to check is missing or invalid return Error
 
 <br>
 
-#### Wait for the following parameters by POST method:
+Wait for the following parameters by POST method:
 
 ```
 user=facu2279
@@ -35,10 +35,9 @@ Example
 http://localhost/test/validar_pin?user=facu2279&pin=123456
 ```
 <br>
---------------------------------------------
 
 
-GENERATE A NEW USER
+#### GENERATE A NEW USER
 
 - This endpoint receives the user for whom we want to generate a qr,
 we check that it is not empty or null,
@@ -51,7 +50,7 @@ then we save it in the database and return the generated qr for the user scan
 
 <br>
 
-#### Wait for the following parameters by POST method:
+Wait for the following parameters by POST method:
 
 ```
 user=facu2279
@@ -75,9 +74,8 @@ Error
 ```
 
 <br>
---------------------------------------------
 
-LOGIN
+#### LOGIN
 
 - This endpoint receives user and password by parameter,
 we check that they are not empty or null, then we bring
@@ -87,7 +85,7 @@ if they do not match or any of the checks are not successful, it returns False
 
 <br>
 
-#### Wait for the following parameters by POST method:
+Wait for the following parameters by POST method:
 
 ```
 user=facu2279
@@ -108,7 +106,7 @@ False
 <br>
 --------------------------------------------
 
-MAKE NEW SYSADMIN
+#### MAKE NEW SYSADMIN
 
 - This endpoint receives by parameter the username
 and password of the new system administrator that you want
@@ -121,7 +119,7 @@ with that name, it returns Error
 
 <br>
 
-#### Wait for the following parameters by POST method:
+Wait for the following parameters by POST method:
 
 ```
 user=facu2279
