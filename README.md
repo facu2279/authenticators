@@ -84,7 +84,8 @@ Error
 - This endpoint receives user and password by parameter,
 we check that they are not empty or null, then we bring
 the password that corresponds to that user from the database,
-if it matches, return True,
+if it matches, return jwt token to check on the frontend that the session is correct
+and someone who did not pass the login does not access,
 if they do not match or any of the checks are not successful, it returns False
 
 <br>
