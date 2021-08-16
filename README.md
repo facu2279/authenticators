@@ -154,6 +154,7 @@ To create your database I recommend you download [Xampp](https://www.apachefrien
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/)
 - [Flask-MySQLdb](https://docs.python.org/3/library/datetime.html)
 - [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/)
+- [PyJWT Documentation](https://pyjwt.readthedocs.io/en/latest/)
 
 ## Authors
 Made by [Facundo Diaz](https://github.com/facu2279)

@@ -26,6 +26,9 @@
 ***  https://flask-cors.readthedocs.io/en/latest/                     ***
 ***                                                                   ***
 ***                                                                   ***
+***  PyJWT Documentation                                              ***
+***  https://pyjwt.readthedocs.io/en/latest/                          ***
+***                                                                   ***
 ***  datetime — Basic date and time types                             ***
 ***  https://docs.python.org/3/library/datetime.html                  ***
 ***                                                                   ***
@@ -41,6 +44,7 @@ from flask_mysqldb import MySQL
 import pyotp
 from flask import *
 from flask_cors import CORS
+import jwt
 app = Flask(__name__)
 CORS(app)
 
@@ -151,7 +155,8 @@ LOGIN
 This endpoint receives user and password by parameter,
 we check that they are not empty or null, then we bring
 the password that corresponds to that user from the database,
-if it matches, return True,
+if it matches, return jwt token to check on the frontend that the session is correct
+and someone who did not pass the login does not access,
 if they do not match or any of the checks are not successful, it returns False
 
 *****************************************************************************"""
@@ -165,7 +170,9 @@ def c():
     if user != "" and user != None and password != "" and password != None:
         pass_bdd = traer_password(user)
         if password == pass_bdd:
-            return "True"
+            payload_data = {"user": user}
+            token = jwt.encode(payload=payload_data, key='hola')
+            return token
     return "False"
 
 """********************************************************************************
