@@ -41,7 +41,7 @@ True or False or Error
 <br>
 
 
-#### GENERATE A NEW QR
+#### GENERATE A NEW USER
 
 - This endpoint receives the user for whom we want to generate a qr,
 we check that it is not empty or null,
@@ -62,6 +62,34 @@ user=facu2279
 Example request
 ```
 http://localhost/test/generar_usuario?user=facu2279
+```
+Return
+```
+otpauth://totp/App_Testing:facu2279?secret=QMYRFMCW6APDAQDTOHTFKSFBF37RR2UE&issuer=App_Testing
+```
+
+<br>
+
+#### MODIFY QR
+
+- MODIFY QR
+---------------------
+
+This endpoint receives by parameter the username to which
+we want to generate a new qr, we check that there is a user with that name,
+we generate all the necessary data as in the / test / generate_user,
+but the function that we call the database, it is an update and not an insert
+
+<br>
+
+Wait for the following parameters by POST method:
+
+```
+user=facu2279
+```
+Example request
+```
+http://localhost/test/modificar_usuario?user=facu2279
 ```
 Return
 ```
