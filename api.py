@@ -218,6 +218,8 @@ DATABASE SECTION
 
 """
 
+This function searches the database for the secret key corresponding to the user
+
 """
 def traer_secret_key(user):
     resultado = ""
@@ -230,6 +232,8 @@ def traer_secret_key(user):
 
 """
 
+This function saves the generated qr with the user's data and date in the database
+
 """
 def guardar_usuario(dict):
     sql = "INSERT INTO usuarios_qr (usuario, secret_key, qr, fecha) VALUES ('" + dict['user'] + "', '" + dict['secret_key'] + "', '" + dict['qr'] + "', '" + dict['fecha'] + "');"
@@ -238,6 +242,8 @@ def guardar_usuario(dict):
     mysql.connection.commit()
 
 """
+
+This function brings from the database the password that matches the user to check at login
 
 """
 def traer_password(user):
@@ -252,6 +258,8 @@ def traer_password(user):
 
 """
 
+This function checks if a user already has a generated qr in the database
+
 """
 def chequear_existente(user):
     consulta = mysql.connection.cursor()
@@ -260,6 +268,8 @@ def chequear_existente(user):
     return resultado
 
 """
+
+This function checks if a username is available
 
 """
 def chequear_admin_existente(user):
@@ -270,6 +280,8 @@ def chequear_admin_existente(user):
 
 """
 
+This function saves a new administrator in the database
+
 """
 def guardar_admin(user, password):
     sql = "INSERT INTO usuarios (usuario, password) VALUES ('" + user + "', '" + password + "');"
@@ -279,6 +291,8 @@ def guardar_admin(user, password):
 
 """
 
+This function encrypts passwords
+
 """
 def enc(s):
     chars = "qwertyuioplkjhgfdsazxcvbnm"
@@ -287,6 +301,8 @@ def enc(s):
     return ''.join( caracter(c) for c in s ) 
 """
 
+This function decrypts passwords
+
 """
 def des(s):
     for i in range(0,12):
@@ -294,6 +310,8 @@ def des(s):
     return s
 
 """
+
+This function generates a random string of 10 characters
 
 """
 def generar_key_random():
