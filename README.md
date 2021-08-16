@@ -131,7 +131,7 @@ http://localhost/test/login?user=facu2279&password=hola123
 ```
 Return
 ```
-True or False
+True or False or Error
 ```
 <br>
 

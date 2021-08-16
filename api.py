@@ -4,9 +4,10 @@
 ***                                                                   ***
 *** END-POINTS: 1- /test/validar_pin                                  ***
 ***             2- /test/generar_usuario                              ***
-***             3- /test/login                                        ***
-***             4- /test/generar_admin                                ***
-***             5- /test                                              ***
+***             3- /test/modificar_usuario                            ***
+***             4- /test/login                                        ***
+***             5- /test/generar_admin                                ***
+***             6- /test                                              ***
 ***                                                                   ***
 ***                                                                   ***
 ***                                                                   ***
@@ -42,8 +43,8 @@
 from datetime import datetime
 import string
 import random
-from flask_mysqldb import MySQL
 import pyotp
+from flask_mysqldb import MySQL
 from flask import *
 from flask_cors import CORS
 import jwt
@@ -217,7 +218,9 @@ def c():
             key_random = str(generar_key_random())
             token = jwt.encode(payload=payload_data, key=key_random)
             return token
-    return "False"
+        else:
+            return "False"
+    return "Error"
 
 """********************************************************************************
 
@@ -235,8 +238,10 @@ with that name, it returns Error
 
 @app.route("/test/generar_admin", methods=["GET", "POST"])
 def d():
+    # If the data is passed to me through parameters inside the data section in the request, use this lines
     # user = request.form['usuario']
     # password = request.form['password']
+    # If the data is passed to me by url, use this lines
     user = str(request.args.get('user'))
     password = str(request.args.get('password'))
     if user != "" and user != None and password != "" and password != None:
