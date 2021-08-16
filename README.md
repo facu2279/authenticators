@@ -4,7 +4,7 @@ Simple REST API to generate qr codes for two-step authentication, usable for Mic
 
 <br><br>
 
-<img src="images/autenticacion-google.jpg"/>
+<img src="img/autenticacion-google.jpg"/>
 <br><br>
 
 ## ENDPOINTS
@@ -70,7 +70,7 @@ otpauth://totp/App_Testing:facu2279?secret=QMYRFMCW6APDAQDTOHTFKSFBF37RR2UE&issu
 
 If you generate the qr equivalent to this text it would give you this image:
 <br><br>
-![alt text](images/qr-1.png)
+![alt text](img/qr-1.png)
 
 or Return
 ```
@@ -144,7 +144,7 @@ Success or Error
 To create your database I recommend you download [MySQL](https://dev.mysql.com/downloads/installer/) and then run the sql file called sql_basic.sql to use this api with preloaded test data
 
 <br>
-<img src="images/mysql.jpg" width="300"/>
+<a src="https://dev.mysql.com/downloads/installer/" target="_blank"><img src="img/mysql.jpg" width="300"/></a>
 
 <br><br>
 

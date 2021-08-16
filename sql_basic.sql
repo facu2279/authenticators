@@ -1,3 +1,6 @@
+/*
+ * Made by Facundo Diaz - August 2021
+ */
 CREATE DATABASE testing;
 USE testing;
 
