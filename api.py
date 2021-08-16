@@ -29,6 +29,7 @@
 ***  PyJWT Documentation                                              ***
 ***  https://pyjwt.readthedocs.io/en/latest/                          ***
 ***                                                                   ***
+***                                                                   ***
 ***  datetime — Basic date and time types                             ***
 ***  https://docs.python.org/3/library/datetime.html                  ***
 ***                                                                   ***
