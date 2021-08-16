@@ -144,7 +144,7 @@ Success or Error
 To create your database I recommend you download [MySQL](https://dev.mysql.com/downloads/installer/) and then run the sql file called sql_basic.sql to use this api with preloaded test data
 
 <br>
-<a src="https://dev.mysql.com/downloads/installer/" target="_blank"><img src="img/mysql.jpg" width="300"/></a>
+<a href="https://dev.mysql.com/downloads/installer/" target="_blank"><img src="img/mysql.jpg" width="300"/></a>
 
 <br><br>
 
