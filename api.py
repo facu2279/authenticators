@@ -91,8 +91,10 @@ if any of the data to check is missing or invalid return Error
 ******************************************************************************"""
 @app.route("/test/validar_pin", methods=["GET", "POST"])
 def a():
+    # If the data is passed to me through parameters inside the data section in the request, use this lines
     #user = request.form['user']
     #pin = request.form['pin']
+    # If the data is passed to me by url, use this lines
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
 
@@ -130,7 +132,9 @@ then we save it in the database and return the generated qr for the user scan
 @app.route("/test/generar_usuario", methods=["GET", "POST"])
 def b():
     usuario_a_guardar = {}
+    # If the data is passed to me through parameters inside the data section in the request, use this line
     # user = request.form['usuario']
+    # If the data is passed to me by url, use this line
     user = str(request.args.get('user'))
     if user != "" and user != None:
         resultado = chequear_existente(user)
@@ -165,8 +169,10 @@ if they do not match or any of the checks are not successful, it returns False
 
 @app.route("/test/login", methods=["GET", "POST"])
 def c():
+    # If the data is passed to me through parameters inside the data section in the request, use this lines
     # user = request.form['usuario']
     # password = request.form['password']
+    # If the data is passed to me by url, use this lines
     user = str(request.args.get('user'))
     password = str(request.args.get('password'))
     if user != "" and user != None and password != "" and password != None:
