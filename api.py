@@ -172,7 +172,8 @@ def c():
         if password == pass_bdd:
             payload_data = {"user": user,
                             "estado": True}
-            token = jwt.encode(payload=payload_data, key='hola')
+            key_random = str(generar_key_random())
+            token = jwt.encode(payload=payload_data, key=key_random)
             return token
     return "False"
 
@@ -294,9 +295,9 @@ def des(s):
 """
 
 """
-def generar_token_temp():
-    length_of_string = 16
-    print(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length_of_string)))
+def generar_key_random():
+    length_of_string = 10
+    return (''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length_of_string)))
 
 """****************************
 

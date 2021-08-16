@@ -106,7 +106,6 @@ Return
 True or False
 ```
 <br>
---------------------------------------------
 
 #### MAKE NEW SYSADMIN
 
