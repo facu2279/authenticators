@@ -144,7 +144,7 @@ Error
 <br>
 
 ## Storage
-To create your database I recommend you download [Xampp](https://www.apachefriends.org/es/download.html) and then run the sql file called sql_basic.sql to use this api with preloaded test data
+To create your database I recommend you download [MySQL](https://dev.mysql.com/downloads/installer/) and then run the sql file called sql_basic.sql to use this api with preloaded test data
 
 <br>
 
