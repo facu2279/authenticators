@@ -4,8 +4,7 @@ Simple REST API to generate qr codes for two-step authentication, usable for mic
 
 <br><br>
 
-<img src="images/microsoft.jpg" width="330" height="100"/>
-<img src="images/google.jpg" width="305" height="100"/>
+<img src="images/autenticacion-google.jpg"/>
 <br><br>
 
 ## ENDPOINTS
