@@ -48,6 +48,7 @@ from flask_mysqldb import MySQL
 from flask import *
 from flask_cors import CORS
 import jwt
+from werkzeug.datastructures import ContentSecurityPolicy
 app = Flask(__name__)
 CORS(app)
 
@@ -173,7 +174,6 @@ def e():
     # user = request.form['usuario']
     # If the data is passed to me by url, use this line
     user = str(request.args.get('user'))
-    print(user)
     if user != "" and user != None:
         resultado = chequear_existente(user)
         if resultado:
@@ -188,6 +188,33 @@ def e():
             modificar_qr(usuario_a_guardar)
             return str(qr)
     return "Error"
+
+
+"""****************************************************************************
+
+DELETE USER QR
+---------------------
+
+
+This endpoint receives the name of the user to delete, checks if it exists,
+if it removes it from the database and returns Success,
+if it does not exist, it returns Error
+
+********************************************************************************"""
+
+@app.route("/test/eliminar_usuario", methods=["GET", "POST"])
+def f():
+    # If the data is passed to me through parameters inside the data section in the request, use this line
+    # user = request.form['usuario']
+    # If the data is passed to me by url, use this line
+    user = str(request.args.get('user'))
+    if user != "" and user != None:
+        resultado = chequear_existente(user)
+        if resultado:
+            eliminar_user(user)
+            return "Success"
+    return "Error"
+
 
 """*************************************************************************
 
@@ -322,6 +349,15 @@ This function updates the new qr data in the database
 def modificar_qr(usuario):
     sql = "UPDATE usuarios_qr SET qr='" + usuario['qr'] + "', fecha='" + usuario['fecha'] + "', secret_key='" + usuario['secret_key'] + "'"
     sql += "WHERE usuario='" + usuario['user'] + "'"
+    consulta = mysql.connection.cursor()
+    consulta.execute(sql)
+    mysql.connection.commit()
+
+"""
+
+"""
+def eliminar_user(user):
+    sql = "DELETE FROM usuarios_qr WHERE usuario='" + user + "';"
     consulta = mysql.connection.cursor()
     consulta.execute(sql)
     mysql.connection.commit()
