@@ -48,6 +48,7 @@ from flask_mysqldb import MySQL
 from flask import *
 from flask_cors import CORS
 import jwt
+import re
 from werkzeug.datastructures import ContentSecurityPolicy
 app = Flask(__name__)
 CORS(app)
@@ -214,6 +215,13 @@ def f():
     return "Error"
 
 
+@app.route("/test/listar_usuarios", methods=["GET", "POST"])
+def g():
+    res = traer_usuarios()
+    print(res)
+    return res
+
+
 """*************************************************************************
 
 LOGIN
@@ -360,11 +368,34 @@ def eliminar_user(user):
     consulta.execute(sql)
     mysql.connection.commit()
 
-"""
-
-This function checks if a username is available
 
 """
+
+
+"""
+def traer_usuarios():
+    usuarios = []
+    usuario = {}
+    characters = ["date.time"]
+    consulta = mysql.connection.cursor()
+    consulta.execute("SELECT * FROM usuarios_qr;")
+    resultado = consulta.fetchall()
+    for i in resultado:
+        usuario['id'] = i[0]
+        usuario['usuario'] = i[1]
+        usuario['secret_key'] = i[2]
+        usuario['qr'] = i[3]
+        date = i[4]
+        usuario['date'] = date
+        usuarios.append(usuario)
+    
+    string = ""
+    for i in range(0, len(usuarios) - 1):
+        string += str(usuarios[i])
+        string += '\n'
+    return string
+
+
 def chequear_admin_existente(user):
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT * FROM usuarios WHERE usuario='" + user + "';")
