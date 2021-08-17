@@ -195,13 +195,11 @@ def e():
 DELETE USER QR
 ---------------------
 
-
 This endpoint receives the name of the user to delete, checks if it exists,
 if it removes it from the database and returns Success,
 if it does not exist, it returns Error
 
 ********************************************************************************"""
-
 @app.route("/test/eliminar_usuario", methods=["GET", "POST"])
 def f():
     # If the data is passed to me through parameters inside the data section in the request, use this line
