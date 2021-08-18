@@ -376,7 +376,6 @@ def eliminar_user(user):
 def traer_usuarios():
     usuarios = []
     usuario = {}
-    characters = ["date.time"]
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT * FROM usuarios_qr;")
     resultado = consulta.fetchall()
