@@ -279,7 +279,7 @@ def d():
     password = str(request.args.get('password'))
     if user != "" and user != None and password != "" and password != None:
         resultado = chequear_admin_existente(user)
-        if resultado:
+        if resultado == 1:
             return "Error"
         else:
             password = enc(password)
@@ -399,7 +399,10 @@ def chequear_admin_existente(user):
     consulta = mysql.connection.cursor()
     consulta.execute("SELECT * FROM usuarios WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
-    return resultado
+    if resultado:
+        return 1
+    else:
+        return 0
 
 """
 
