@@ -107,64 +107,6 @@ Error
 
 <br>
 
-#### LOGIN
-
-- This endpoint receives user and password by parameter,
-we check that they are not empty or null, then we bring
-the password that corresponds to that user from the database,
-if it matches, return jwt token to check on the frontend that the session is correct
-and someone who did not pass the login does not access,
-if they do not match or any of the checks are not successful, it returns False
-
-<br>
-
-Wait for the following parameters by POST method:
-
-```
-user=facu2279
-
-password=hola123
-```
-Example request
-```
-http://localhost/test/login?user=facu2279&password=hola123
-```
-Return
-```
-True or False or Error
-```
-<br>
-
-#### MAKE NEW SYSADMIN
-
-- This endpoint receives by parameter the username
-and password of the new system administrator that you want
-to create, it is checked that it is not empty or null,
-then it is checked that there is not an equal user registered in the database,
-if it does not exist, we encrypt the password and save the new user in the database
-and then return success, if any of the checks fails or there is a user
-with that name, it returns Error
-
-
-<br>
-
-Wait for the following parameters by POST method:
-
-```
-user = facu2279
-
-password = hola123
-```
-Example request
-```
-http://localhost/test/generar_admin?user=facu2279&password=hola123
-```
-Return
-```
-Success or Error
-```
-<br>
-
 ## Storage
 
 <br>
