@@ -107,6 +107,18 @@ Error
 
 <br>
 
+#### DELETE QR
+
+- DELETE QR
+---------------------
+.
+.
+.
+.
+.
+
+<br>
+
 ## Storage
 
 <br>
