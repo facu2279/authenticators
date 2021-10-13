@@ -5,8 +5,6 @@
 *** END-POINTS: 1- /test/validar_pin                                  ***
 ***             2- /test/generar_usuario                              ***
 ***             3- /test/modificar_usuario                            ***
-***             4- /test/login                                        ***
-***             5- /test/generar_admin                                ***
 ***             6- /test                                              ***
 ***                                                                   ***
 ***                                                                   ***
@@ -222,70 +220,6 @@ def g():
     return res
 
 
-"""*************************************************************************
-
-LOGIN
------------
-This endpoint receives user and password by parameter,
-we check that they are not empty or null, then we bring
-the password that corresponds to that user from the database,
-if it matches, return jwt token to check on the frontend that the session is correct
-and someone who did not pass the login does not access,
-if they do not match or any of the checks are not successful, it returns False
-
-*****************************************************************************"""
-
-@app.route("/test/login", methods=["GET", "POST"])
-def c():
-    # If the data is passed to me through parameters inside the data section in the request, use this lines
-    # user = request.form['usuario']
-    # password = request.form['password']
-    # If the data is passed to me by url, use this lines
-    user = str(request.args.get('user'))
-    password = str(request.args.get('password'))
-    if user != "" and user != None and password != "" and password != None:
-        pass_bdd = traer_password(user)
-        if password == pass_bdd:
-            payload_data = {"user": user,
-                            "estado": True}
-            key_random = str(generar_key_random())
-            token = jwt.encode(payload=payload_data, key=key_random)
-            return token
-        else:
-            return "False"
-    return "Error"
-
-"""********************************************************************************
-
-MAKE NEW ADMIN
-------------------------
-This endpoint receives by parameter the username
-and password of the new system administrator that you want
-to create, it is checked that it is not empty or null,
-then it is checked that there is not an equal user registered in the database,
-if it does not exist, we encrypt the password and save the new user in the database
-and then return success, if any of the checks fails or there is a user
-with that name, it returns Error
-
-**********************************************************************************"""
-
-@app.route("/test/generar_admin", methods=["GET", "POST"])
-def d():
-    # If the data is passed to me through parameters inside the data section in the request, use this lines
-    # user = request.form['usuario']
-    # password = request.form['password']
-    # If the data is passed to me by url, use this lines
-    user = str(request.args.get('user'))
-    password = str(request.args.get('password'))
-    if user != "" and user != None and password != "" and password != None:
-        resultado = chequear_admin_existente(user)
-        if resultado == 1:
-            return "Error"
-        else:
-            password = enc(password)
-            guardar_admin(user, password)
-            return "Success"
-    return "Error"
 
 
 """********************************
@@ -322,21 +256,6 @@ def guardar_usuario(dict):
 
 """
 
-This function brings from the database the password that matches the user to check at login
-
-"""
-def traer_password(user):
-    resultado = ""
-    consulta = mysql.connection.cursor()
-    consulta.execute("SELECT password FROM usuarios WHERE usuario='" + user + "';")
-    resultado = consulta.fetchall()
-    if resultado:
-        resultado = resultado[0][0]
-        resultado = des(resultado)
-    return str(resultado)
-
-"""
-
 This function checks if a user already has a generated qr in the database
 
 """
@@ -345,7 +264,6 @@ def chequear_existente(user):
     consulta.execute("SELECT * FROM usuarios_qr WHERE usuario='" + user + "';")
     resultado = consulta.fetchall()
     return resultado
-
 
 """
 
@@ -367,7 +285,6 @@ def eliminar_user(user):
     consulta = mysql.connection.cursor()
     consulta.execute(sql)
     mysql.connection.commit()
-
 
 """
 
@@ -393,47 +310,6 @@ def traer_usuarios():
         string += str(usuarios[i])
         string += '\n'
     return string
-
-
-def chequear_admin_existente(user):
-    consulta = mysql.connection.cursor()
-    consulta.execute("SELECT * FROM usuarios WHERE usuario='" + user + "';")
-    resultado = consulta.fetchall()
-    if resultado:
-        return 1
-    else:
-        return 0
-
-"""
-
-This function saves a new administrator in the database
-
-"""
-def guardar_admin(user, password):
-    sql = "INSERT INTO usuarios (usuario, password) VALUES ('" + user + "', '" + password + "');"
-    consulta = mysql.connection.cursor()
-    consulta.execute(sql)
-    mysql.connection.commit()
-
-"""
-
-This function encrypts passwords
-
-"""
-def enc(s):
-    chars = "qwertyuioplkjhgfdsazxcvbnm"
-    trans = chars[10:]+chars[:10]
-    caracter = lambda c: trans[chars.find(c)] if chars.find(c)>-1 else c
-    return ''.join( caracter(c) for c in s ) 
-"""
-
-This function decrypts passwords
-
-"""
-def des(s):
-    for i in range(0,12):
-        s = enc(s)
-    return s
 
 """
 
