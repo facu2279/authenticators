@@ -99,7 +99,7 @@ def a():
     user = str(request.args.get('user'))
     pin = str(request.args.get('pin'))
 
-    if user != "" and user != None:
+    if user != "" and user != None and user != "None":
         secret_key_user = traer_secret_key(user)
         if secret_key_user != "" and secret_key_user != None:
             if pin != "" and pin != None:
@@ -137,7 +137,7 @@ def b():
     # user = request.form['usuario']
     # If the data is passed to me by url, use this line
     user = str(request.args.get('user'))
-    if user != "" and user != None:
+    if user != "" and user != None and user != "None":
         resultado = chequear_existente(user)
         if resultado:
             return user +  " ya tiene un qr activo"
@@ -173,7 +173,7 @@ def e():
     # user = request.form['usuario']
     # If the data is passed to me by url, use this line
     user = str(request.args.get('user'))
-    if user != "" and user != None:
+    if user != "" and user != None and user != "None":
         resultado = chequear_existente(user)
         if resultado:
             secret_key = pyotp.random_base32()
@@ -205,7 +205,7 @@ def f():
     # user = request.form['usuario']
     # If the data is passed to me by url, use this line
     user = str(request.args.get('user'))
-    if user != "" and user != None:
+    if user != "" and user != None and user != "None":
         resultado = chequear_existente(user)
         if resultado:
             eliminar_user(user)
